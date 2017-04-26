@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+import "github.com/abaeve/services-common/proto/common.proto";
+
+package abaeve.eveonline;
+
+enum Locale {
+    EN = 0;
+    DE = 1;
+    FR = 2;
+    JA = 3;
+    RU = 4;
+    ZH = 5;
+}
+
+service TypeQuery {
+    rpc FindTypesByTypeIds (TypeIdRequest) returns (TypeResponse) {
+    };
+    rpc FindTypesByTypeNames (TypeNameRequest) returns (TypeResponse) {
+    };
+    rpc SearchForTypes (TypeNameRequest) returns (TypeNameAndIdResponse) {
+    };
+}
+
+message TypeIdRequest {
+    repeated int32 TypeId = 1;
+    Locale Locale = 2;
+}
+
+message TypeNameRequest {
+    repeated string TypeName = 1;
+    Locale Locale = 2;
+}
+
+message TypeResponse {
+    repeated Type = 1;
+    abaeve.common.ServiceResponseDetail ResponseDetails = 2;
+}
+
+message TypeNameAndIdResponse {
+    repeated int32 TypeId = 1;
+    repeated string Name = 2;
+    abaeve.common.ServiceResponseDetail ResponseDetails = 3;
+}
+
+message Type {
+    float BasePrice = 1;
+    float Capacity = 2;
+    string Description = 3;
+    int32 GraphicId = 4;
+    int32 GroupId = 5;
+    int32 IconId = 6;
+    int32 MarketGroupId = 7;
+    float Mass = 8;
+    string Name = 9;
+    int32 PortionSize = 10;
+    bool Published = 11;
+    float Radius = 12;
+    string FactionName = 13;
+    float Volume = 14;
+}

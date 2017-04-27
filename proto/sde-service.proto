@@ -33,7 +33,7 @@ message TypeNameRequest {
 }
 
 message TypeResponse {
-    repeated Type = 1;
+    repeated Type Type = 1;
     abaeve.common.ServiceResponseDetail ResponseDetails = 2;
 }
 

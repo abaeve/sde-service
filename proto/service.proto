@@ -1,8 +1,6 @@
 syntax = "proto3";
 
-import "github.com/abaeve/services-common/proto/common.proto";
-
-package abaeve.eveonline;
+package sde;
 
 enum Locale {
     EN = 0;
@@ -34,28 +32,27 @@ message TypeNameRequest {
 
 message TypeResponse {
     repeated Type Type = 1;
-    abaeve.common.ServiceResponseDetail ResponseDetails = 2;
 }
 
 message TypeNameAndIdResponse {
     repeated int32 TypeId = 1;
     repeated string Name = 2;
-    abaeve.common.ServiceResponseDetail ResponseDetails = 3;
 }
 
 message Type {
-    float BasePrice = 1;
-    float Capacity = 2;
-    string Description = 3;
-    int32 GraphicId = 4;
-    int32 GroupId = 5;
-    int32 IconId = 6;
-    int32 MarketGroupId = 7;
-    float Mass = 8;
-    string Name = 9;
-    int32 PortionSize = 10;
-    bool Published = 11;
-    float Radius = 12;
-    string FactionName = 13;
-    float Volume = 14;
+    int32 TypeId = 1;
+    float BasePrice = 2;
+    float Capacity = 3;
+    string Description = 4;
+    int32 GraphicId = 5;
+    int32 GroupId = 6;
+    int32 IconId = 7;
+    int32 MarketGroupId = 8;
+    float Mass = 9;
+    string Name = 10;
+    int32 PortionSize = 11;
+    bool Published = 12;
+    float Radius = 13;
+    string FactionName = 14;
+    float Volume = 15;
 }

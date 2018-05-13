@@ -9,8 +9,10 @@ It is generated from these files:
 
 It has these top-level messages:
 	TypeIdRequest
+	TypeNameSearchRequest
 	TypeNameRequest
 	TypeResponse
+	TypesResponse
 	TypeNameAndIdResponse
 	Type
 */
@@ -46,7 +48,8 @@ var _ server.Option
 
 type TypeQueryService interface {
 	FindTypesByTypeIds(ctx context.Context, in *TypeIdRequest, opts ...client.CallOption) (*TypeResponse, error)
-	FindTypesByTypeNames(ctx context.Context, in *TypeNameRequest, opts ...client.CallOption) (*TypeResponse, error)
+	SearchTypesByTypeNames(ctx context.Context, in *TypeNameSearchRequest, opts ...client.CallOption) (*TypesResponse, error)
+	FindTypeByTypeName(ctx context.Context, in *TypeNameRequest, opts ...client.CallOption) (*TypeResponse, error)
 	SearchForTypes(ctx context.Context, in *TypeNameRequest, opts ...client.CallOption) (*TypeNameAndIdResponse, error)
 }
 
@@ -78,8 +81,18 @@ func (c *typeQueryService) FindTypesByTypeIds(ctx context.Context, in *TypeIdReq
 	return out, nil
 }
 
-func (c *typeQueryService) FindTypesByTypeNames(ctx context.Context, in *TypeNameRequest, opts ...client.CallOption) (*TypeResponse, error) {
-	req := c.c.NewRequest(c.serviceName, "TypeQuery.FindTypesByTypeNames", in)
+func (c *typeQueryService) SearchTypesByTypeNames(ctx context.Context, in *TypeNameSearchRequest, opts ...client.CallOption) (*TypesResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "TypeQuery.SearchTypesByTypeNames", in)
+	out := new(TypesResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *typeQueryService) FindTypeByTypeName(ctx context.Context, in *TypeNameRequest, opts ...client.CallOption) (*TypeResponse, error) {
+	req := c.c.NewRequest(c.serviceName, "TypeQuery.FindTypeByTypeName", in)
 	out := new(TypeResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -102,7 +115,8 @@ func (c *typeQueryService) SearchForTypes(ctx context.Context, in *TypeNameReque
 
 type TypeQueryHandler interface {
 	FindTypesByTypeIds(context.Context, *TypeIdRequest, *TypeResponse) error
-	FindTypesByTypeNames(context.Context, *TypeNameRequest, *TypeResponse) error
+	SearchTypesByTypeNames(context.Context, *TypeNameSearchRequest, *TypesResponse) error
+	FindTypeByTypeName(context.Context, *TypeNameRequest, *TypeResponse) error
 	SearchForTypes(context.Context, *TypeNameRequest, *TypeNameAndIdResponse) error
 }
 
@@ -118,8 +132,12 @@ func (h *TypeQuery) FindTypesByTypeIds(ctx context.Context, in *TypeIdRequest, o
 	return h.TypeQueryHandler.FindTypesByTypeIds(ctx, in, out)
 }
 
-func (h *TypeQuery) FindTypesByTypeNames(ctx context.Context, in *TypeNameRequest, out *TypeResponse) error {
-	return h.TypeQueryHandler.FindTypesByTypeNames(ctx, in, out)
+func (h *TypeQuery) SearchTypesByTypeNames(ctx context.Context, in *TypeNameSearchRequest, out *TypesResponse) error {
+	return h.TypeQueryHandler.SearchTypesByTypeNames(ctx, in, out)
+}
+
+func (h *TypeQuery) FindTypeByTypeName(ctx context.Context, in *TypeNameRequest, out *TypeResponse) error {
+	return h.TypeQueryHandler.FindTypeByTypeName(ctx, in, out)
 }
 
 func (h *TypeQuery) SearchForTypes(ctx context.Context, in *TypeNameRequest, out *TypeNameAndIdResponse) error {
